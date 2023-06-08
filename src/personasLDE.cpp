@@ -1,4 +1,5 @@
 #include "../include/personasLDE.h"
+#include "string.h"
 
 ///////////////////////////////////
 ////// PEGAR CÓDIGO TAREA 3 //////
@@ -13,26 +14,28 @@ struct rep_nodo
     rep_nodo *ant;
 };
 
-struct rep_personasLDE {
-rep_nodo *ini;
+struct rep_personasLDE
+{
+    rep_nodo *ini;
     rep_nodo *fin;
 
     nat tamanio;
-
 };
 
-TPersonasLDE crearTPersonasLDE(){
-TPersonasLDE listaPersona = new rep_personasLDE;
+TPersonasLDE crearTPersonasLDE()
+{
+    TPersonasLDE listaPersona = new rep_personasLDE;
 
     listaPersona->ini = NULL;
     listaPersona->fin = NULL;
     listaPersona->tamanio = 0;
 
     return listaPersona;
-    }
+}
 
-void insertarTPersonasLDE(TPersonasLDE &personas, TPersona persona, nat pos){
-  /*seguramente se pueda mejorar*/
+void insertarTPersonasLDE(TPersonasLDE &personas, TPersona persona, nat pos)
+{
+    /*seguramente se pueda mejorar*/
     nat i;
 
     nodo nuevoNodo = new rep_nodo;
@@ -83,8 +86,9 @@ void insertarTPersonasLDE(TPersonasLDE &personas, TPersona persona, nat pos){
     personas->tamanio++;
 }
 
-void liberarTPersonasLDE(TPersonasLDE &personasLDE){
- nodo elementoAEliminar;
+void liberarTPersonasLDE(TPersonasLDE &personasLDE)
+{
+    nodo elementoAEliminar;
 
     while (personasLDE->ini != NULL)
     {
@@ -100,23 +104,25 @@ void liberarTPersonasLDE(TPersonasLDE &personasLDE){
     personasLDE = NULL;
 }
 
-void imprimirTPersonasLDE(TPersonasLDE personas){
-     nodo actual = personas->ini;
+void imprimirTPersonasLDE(TPersonasLDE personas)
+{
+    nodo actual = personas->ini;
 
     while (actual != NULL)
     {
         imprimirTPersona(actual->persona);
         actual = actual->sig;
     }
-    
 }
 
-nat cantidadTPersonasLDE(TPersonasLDE personas){
+nat cantidadTPersonasLDE(TPersonasLDE personas)
+{
     return personas->tamanio;
 }
 
-void eliminarInicioTPersonasLDE(TPersonasLDE &personas){
- if (personas->tamanio > 0)
+void eliminarInicioTPersonasLDE(TPersonasLDE &personas)
+{
+    if (personas->tamanio > 0)
     {
         nodo elementoAEliminar = personas->ini;
 
@@ -138,8 +144,9 @@ void eliminarInicioTPersonasLDE(TPersonasLDE &personas){
     }
 }
 
-void eliminarFinalTPersonasLDE(TPersonasLDE &personas){
- if (personas->tamanio > 0)
+void eliminarFinalTPersonasLDE(TPersonasLDE &personas)
+{
+    if (personas->tamanio > 0)
     {
         nodo elementoAEliminar = personas->fin;
 
@@ -162,18 +169,20 @@ void eliminarFinalTPersonasLDE(TPersonasLDE &personas){
     }
 }
 
-bool estaEnTPersonasLDE(TPersonasLDE personas, nat id){
-  nodo actual = personas->ini;
+bool estaEnTPersonasLDE(TPersonasLDE personas, nat id)
+{
+    nodo actual = personas->ini;
 
     while ((actual != NULL) && (idTPersona(actual->persona) != id))
     {
         actual = actual->sig;
     }
     return actual != NULL;
-    }
+}
 
-TPersona obtenerDeTPersonasLDE(TPersonasLDE personas, nat id){
-nodo actual = personas->ini;
+TPersona obtenerDeTPersonasLDE(TPersonasLDE personas, nat id)
+{
+    nodo actual = personas->ini;
 
     while (idTPersona(actual->persona) != id)
     {
@@ -181,10 +190,11 @@ nodo actual = personas->ini;
     }
 
     return actual->persona;
-    }
+}
 
-TPersonasLDE concatenarTPersonasLDE(TPersonasLDE personas1, TPersonasLDE personas2){
-  TPersonasLDE resultado = crearTPersonasLDE();
+TPersonasLDE concatenarTPersonasLDE(TPersonasLDE personas1, TPersonasLDE personas2)
+{
+    TPersonasLDE resultado = crearTPersonasLDE();
 
     resultado->ini = personas1->ini;
     resultado->fin = personas2->fin;
@@ -211,22 +221,25 @@ TPersonasLDE concatenarTPersonasLDE(TPersonasLDE personas1, TPersonasLDE persona
     delete personas2;
 
     return resultado;
-    }
-
-void insertarInicioDeTPersonasLDE(TPersonasLDE &personas, TPersona persona){
-        insertarTPersonasLDE(personas, persona, 1);
-
 }
 
-void insertarFinalDeTPersonasLDE(TPersonasLDE &personas, TPersona persona){    
+void insertarInicioDeTPersonasLDE(TPersonasLDE &personas, TPersona persona)
+{
+    insertarTPersonasLDE(personas, persona, 1);
+}
+
+void insertarFinalDeTPersonasLDE(TPersonasLDE &personas, TPersona persona)
+{
     insertarTPersonasLDE(personas, persona, personas->tamanio + 1);
 }
 
-TPersona obtenerInicioDeTPersonasLDE(TPersonasLDE personas){
+TPersona obtenerInicioDeTPersonasLDE(TPersonasLDE personas)
+{
     return personas->ini->persona;
 }
 
-TPersona obtenerFinalDeTPersonasLDE(TPersonasLDE personas){
+TPersona obtenerFinalDeTPersonasLDE(TPersonasLDE personas)
+{
     return personas->fin->persona;
 }
 
@@ -238,55 +251,61 @@ TPersona obtenerFinalDeTPersonasLDE(TPersonasLDE personas){
 /////////////  NUEVAS FUNCIONES  //////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 
-void eliminarPersonaConNombreTPersonasLDE(TPersonasLDE &personas, const char nombre[100]){
+void eliminarPersonaConNombreTPersonasLDE(TPersonasLDE &personas, const char nombre[100])
+{
+   if(personas->ini != NULL){
 
-   nodo actual = personas->ini;
+    if (strcmp(nombreTPersona(personas->ini->persona), nombre) == 0)
+    {
+        eliminarInicioTPersonasLDE(personas);
+    }
+    else if (strcmp(nombreTPersona(personas->fin->persona), nombre) == 0)
+    {
+        eliminarFinalTPersonasLDE(personas);
+    }
+    else
+    {
+        nodo actual = personas->ini;
 
-    while (actual != NULL) {
-        
-        if (strcmp( nombreTPersona(actual->persona), nombre) == 0) {
-            if (actual == personas->ini) {
-                personas->ini = actual->sig;
-            }
-            if (actual == personas->fin) {
-                personas->fin = actual->ant;
-            }
-            if (actual->ant != NULL) {
-                actual->ant->sig = actual->ant;
-            }
-            if (actual->sig != NULL) {
-                actual->sig->ant = actual->ant;
-            }
+        while ((actual != NULL) && (strcmp(nombreTPersona(actual->persona), nombre) != 0))
+        {
+            actual = actual->sig;
+        }
+        if (actual != NULL)
+        {
+            actual->sig->ant = actual->ant;
+            actual->ant->sig = actual->sig;
+
+
             liberarTPersona(actual->persona);
             delete actual;
-            personas->tamanio --;
-            break;
+            personas->tamanio--;
         }
-        actual = actual->sig;
-    
-}
+    }
+    }
 }
 
-bool estaPersonaConNombreEnTPersonasLDE(TPersonasLDE personas, const char nombre[100]){
-    
-    while ((personas->ini != NULL) && (strcmp(nombreTPersona(personas->ini->persona), nombre) != 0))
-    {
-        personas->ini = personas->ini->sig;
+bool estaPersonaConNombreEnTPersonasLDE(TPersonasLDE personas, const char nombre[100])
+{
+    nodo indice = personas->ini;
+
+    while((indice != NULL) && strcmp(nombreTPersona(indice->persona), nombre) != 0) {
+        indice = indice->sig;
     }
-    
-    
-    return personas->ini != NULL;
+    return indice != NULL;   
 }
 
-TPersona obtenerPersonaConNombreTPersonasLDE(TPersonasLDE personas, const char nombre[100]){
-     while (strcmp(nombreTPersona(personas->ini->persona), nombre) != 0)
-    {
-        personas->ini = personas->ini->sig;
+TPersona obtenerPersonaConNombreTPersonasLDE(TPersonasLDE personas, const char nombre[100])
+{
+    nodo  indice = personas->ini;
+
+    while (strcmp(nombreTPersona(indice->persona), nombre) != 0) {
+        indice = indice->sig;
     }
-    return personas->ini->persona;
+  
+    return indice->persona;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 /////////////  FIN NUEVAS FUNCIONES  //////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-
