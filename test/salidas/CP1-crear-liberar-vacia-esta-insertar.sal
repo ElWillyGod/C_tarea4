@@ -1,0 +1,2 @@
+principal: principal.cpp:899: void main_estaVaciaColaPrioridad(TColaDePrioridadPersona): Assertion `cp != NULL' failed.
+Aborted
