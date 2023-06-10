@@ -33,17 +33,19 @@ TTablaPersonas crearTTablaPersonas(int max){
 
 void insertarPersonaEnTabla(TTablaPersonas &tabla, TPersona persona){
 
-    int pos = funcionDeDispersion(nombreTPersona(persona)) % tabla->max;
+    //int pos = funcionDeDispersion(nombreTPersona(persona)) % tabla->max;
 
    // TPersonasLDE lista = tabla->ListaPersonas[pos];
 
-    insertarInicioDeTPersonasLDE(tabla->ListaPersonas[pos], persona);
+    insertarInicioDeTPersonasLDE(tabla->ListaPersonas[funcionDeDispersion(nombreTPersona(persona)) % tabla->max], persona);
 
     
 }
 
 
 void eliminarPersonaDeTTablaPersonas(TTablaPersonas &tabla, const char nombre[100]){
+
+    eliminarPersonaConNombreTPersonasLDE(tabla->ListaPersonas[funcionDeDispersion(nombre) % tabla->max], nombre);
 }
 
 bool perteneceATTablaPersonas(TTablaPersonas tabla, const char nombre[100]){
@@ -67,4 +69,8 @@ void liberarTTablaPersonas(TTablaPersonas &tabla){
 
 
 void imprimirTTablaPersonas(TTablaPersonas tabla){
+
+    for(int i = 0; i <tabla->max; i++){
+        imprimirTPersonasLDE(tabla->ListaPersonas[i]);
+    }
 }
