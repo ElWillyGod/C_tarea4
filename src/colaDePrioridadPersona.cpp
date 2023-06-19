@@ -61,15 +61,13 @@ void filtrado_descendente(nat pos, TColaDePrioridadPersona &cp)
 {
   while (pos <= cp->pos / 2)
   {
-
     nat hijo = 2 * pos;
-    if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == -1))
-    {
-      hijo++;
-    }
-
     if (!cp->inver)
     {
+      if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == -1))
+      {
+        hijo++;
+      }
       if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == 1)
       {
         TPersona aux = cp->cola[hijo];
@@ -85,6 +83,10 @@ void filtrado_descendente(nat pos, TColaDePrioridadPersona &cp)
     }
     else
     {
+      if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == 1))
+      {
+        hijo++;
+      }
       if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == -1)
       {
         TPersona aux = cp->cola[hijo];
@@ -121,20 +123,12 @@ TColaDePrioridadPersona crearCP(nat N)
 
 void invertirPrioridad(TColaDePrioridadPersona &cp)
 {
-
+  cp->inver = !cp->inver;
   for (nat i = 1; i <= cp->pos / 2; i++)
   {
-    TPersona mini = cp->cola[i];
-
-    cp->cola[i] = cp->cola[cp->pos - i - 1];
-    cp->cola[cp->pos - i - 1] = mini;
-    cp->inver = !cp->inver;
-
-    filtrado_descendente(cp->pos - i, cp);
+    filtrado_ascendente(cp->pos - i + 1, cp);
   }
 }
-
-/**/
 
 void liberarCP(TColaDePrioridadPersona &cp)
 {
@@ -185,7 +179,6 @@ void eliminarPrioritaria(TColaDePrioridadPersona &cp)
 
     if (cp->pos > 1)
     {
-
       cp->cola[1] = cp->cola[cp->pos]; // cambio por el ultimo
 
       liberarTPersona(per);
@@ -209,108 +202,3 @@ TFecha prioridad(nat id, TColaDePrioridadPersona cp)
 {
   return obtenerFechaPrioridad(cp->ids[id]);
 }
-
-/*
-
-     TPersona padre = cp->cola[pos];
-   cp->cola[pos] = cp->cola[pos/2];
-   cp->cola[pos/2] = padre;
-   pos = pos/2;
-   */
-
-/*void filtrado_descendente(nat n, nat pos, TColaDePrioridadPersona &cp)
-{
-
-  while (pos < n)
-  {
-    if (2 * pos <= n)
-    {
-
-      nat hijo = 2 * pos;
-
-      if ((hijo + 1 <= n) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == -1))
-      {
-
-        hijo++;
-      }
-
-      if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == 1)
-      {
-        TPersona aux = cp->cola[hijo];
-
-        cp->cola[hijo] = cp->cola[pos];
-        cp->cola[pos] = aux;
-        pos = hijo;
-      }
-      else
-      {
-        break;
-      }
-    }
-  }
-}
-
-while (2 * pos <= cp->pos)
-  {
-
-    nat hijo = 2 * pos;
-
-    if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == -1))
-    {
-      hijo++;
-    }
-
-    if (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo]), obtenerFechaPrioridad(cp->cola[pos])) == -1)
-    {
-      TPersona aux = cp->cola[pos];
-
-      cp->cola[pos] = cp->cola[hijo];
-      cp->cola[hijo] = aux;
-      pos = hijo;
-    }
-    else
-    {
-      break;
-    }
-  }
-
-nat hijoIzq = 2 * pos + 1;
-  nat hijoDer = 2 * pos + 2;
-  nat posMayor = pos;
-
-  // Comparar la fecha de prioridad de la persona en la posición actual con las de los hijos
-  if (hijoIzq < cp->pos)
-  {
-
-    TFecha fechaActual = obtenerFechaPrioridad(cp->cola[pos]);
-    TFecha fechaIzq = obtenerFechaPrioridad(cp->cola[hijoIzq]);
-
-    bool cumplePrioridad = cp->inver ? (fechaIzq > fechaActual) : (fechaIzq < fechaActual);
-    if (cumplePrioridad)
-    {
-      posMayor = hijoIzq;
-    }
-  }
-
-  if (hijoDer < cp->pos)
-  {
-    TFecha fechaActual = obtenerFechaPrioridad(cp->cola[pos]);
-    TFecha fechaDer = obtenerFechaPrioridad(cp->cola[hijoDer]);
-    bool cumplePrioridad = cp->inver ? (fechaDer > fechaActual) : (fechaDer < fechaActual);
-    if (cumplePrioridad)
-    {
-      posMayor = hijoDer;
-    }
-  }
-
-  if (posMayor != pos)
-  {
-    // Intercambiar elementos
-    TPersona temp = cp->cola[pos];
-    cp->cola[pos] = cp->cola[posMayor];
-    cp->cola[posMayor] = temp;
-
-    // Continuar el filtrado descendente en la posición del hijo que se intercambió
-    filtrado_descendente(posMayor, cp);
-  }
-*/
