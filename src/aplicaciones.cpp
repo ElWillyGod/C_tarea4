@@ -1,6 +1,6 @@
 #include "../include/aplicaciones.h"
 #include "../include/colaDePrioridadPersona.h"
-#include "../include/tablaPersonas.h"
+//#include "../include/tablaPersonas.h"
 
 void listarEnOrden(TTablaPersonas t, char** nombres, nat n){
 
