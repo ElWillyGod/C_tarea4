@@ -10,7 +10,7 @@ struct rep_colaDePrioridadPersona
 
   nat max;
   nat pos;
-  bool inver;
+  int inver;
 };
 
 TFecha obtenerFechaPrioridad(TPersona persona)
@@ -23,36 +23,17 @@ void filtrado_ascendente(nat pos, TColaDePrioridadPersona &cp)
   while (pos > 1)
   {
     nat padre = pos / 2;
-
-    if (!cp->inver)
+    if ((compararTFechas(obtenerFechaPrioridad(cp->cola[padre]), obtenerFechaPrioridad(cp->cola[pos])) == cp->inver))
     {
-      if ((compararTFechas(obtenerFechaPrioridad(cp->cola[padre]), obtenerFechaPrioridad(cp->cola[pos])) == 1))
-      {
-        TPersona aux = cp->cola[pos];
-        cp->cola[pos] = cp->cola[padre];
-        cp->cola[padre] = aux;
+      TPersona aux = cp->cola[pos];
+      cp->cola[pos] = cp->cola[padre];
+      cp->cola[padre] = aux;
 
-        pos = padre;
-      }
-      else
-      {
-        break;
-      }
+      pos = padre;
     }
     else
     {
-      if ((compararTFechas(obtenerFechaPrioridad(cp->cola[padre]), obtenerFechaPrioridad(cp->cola[pos])) == -1))
-      {
-        TPersona aux = cp->cola[pos];
-        cp->cola[pos] = cp->cola[padre];
-        cp->cola[padre] = aux;
-
-        pos = padre;
-      }
-      else
-      {
-        break;
-      }
+      break;
     }
   }
 }
@@ -62,43 +43,22 @@ void filtrado_descendente(nat pos, TColaDePrioridadPersona &cp)
   while (pos <= cp->pos / 2)
   {
     nat hijo = 2 * pos;
-    if (!cp->inver)
-    {
-      if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == -1))
-      {
-        hijo++;
-      }
-      if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == 1)
-      {
-        TPersona aux = cp->cola[hijo];
 
-        cp->cola[hijo] = cp->cola[pos];
-        cp->cola[pos] = aux;
-        pos = hijo;
-      }
-      else
-      {
-        break;
-      }
+    if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == (cp->inver * -1)))
+    {
+      hijo++;
+    }
+    if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == cp->inver)
+    {
+      TPersona aux = cp->cola[hijo];
+
+      cp->cola[hijo] = cp->cola[pos];
+      cp->cola[pos] = aux;
+      pos = hijo;
     }
     else
     {
-      if ((hijo + 1 <= cp->pos) && (compararTFechas(obtenerFechaPrioridad(cp->cola[hijo + 1]), obtenerFechaPrioridad(cp->cola[hijo])) == 1))
-      {
-        hijo++;
-      }
-      if (compararTFechas(obtenerFechaPrioridad(cp->cola[pos]), obtenerFechaPrioridad(cp->cola[hijo])) == -1)
-      {
-        TPersona aux = cp->cola[hijo];
-
-        cp->cola[hijo] = cp->cola[pos];
-        cp->cola[pos] = aux;
-        pos = hijo;
-      }
-      else
-      {
-        break;
-      }
+      break;
     }
   }
 }
@@ -110,7 +70,7 @@ TColaDePrioridadPersona crearCP(nat N)
   nueva->cola = new TPersona[N + 1];
   nueva->ids = new TPersona[N + 1];
   nueva->max = N;
-  nueva->inver = false;
+  nueva->inver = 1;
   nueva->pos = 0;
 
   for (nat i = 0; i <= N; i++)
@@ -123,7 +83,7 @@ TColaDePrioridadPersona crearCP(nat N)
 
 void invertirPrioridad(TColaDePrioridadPersona &cp)
 {
-  cp->inver = !cp->inver;
+  cp->inver = (cp->inver * -1);
   for (nat i = 1; i <= cp->pos / 2; i++)
   {
     filtrado_ascendente(cp->pos - i + 1, cp);
